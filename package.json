@@ -1,0 +1,16 @@
+{
+  "name": "chrome-headless-pdf-maker",
+  "version": "1.0.0",
+  "description": "Easily generate pdfs from your html files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Silentsky0",
+  "license": "MIT",
+  "dependencies": {
+    "chrome-headless-pdf-maker": "file:chrome-headless-pdf-maker-1.0.0.tgz",
+    "puppeteer": "^15.5.0",
+    "yargs": "^17.5.1"
+  }
+}
