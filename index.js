@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 
+
 const puppeteer = require('puppeteer');
 
+
+// Handle program arguments with yargs
 const argv = require('yargs')(process.argv.slice(2))
+
+    // Parameters with input arguments
     .option('url', {
         alias: 'u',
         type: 'string',
@@ -19,6 +24,8 @@ const argv = require('yargs')(process.argv.slice(2))
         default: 'a4',
         description: 'All the valid paper format types when printing a PDF, a full list of them at https://pptr.dev/api/puppeteer.lowercasepaperformat/'
     })
+
+    // Flags
     .boolean('display-header-footer')
     .describe('display-header-footer', 'Whether to show the header and footer')
     .default('display-header-footer', false)
@@ -33,22 +40,23 @@ const argv = require('yargs')(process.argv.slice(2))
     
     .boolean('prefer-css-page-size')
     .describe('prefer-css-page-size', 'Give any CSS @page size declared in the page priority over what is declared in the width or height or format option')
-    .default('prefer-css-page-size', false)
+    .default('prefer-css-page-size', true)
     
     .boolean('print-background')
     .describe('print-background', 'Set to true to print background graphics')
-    .default('print-background', false)
+    .default('print-background', true)
     
-    .demandOption(['url', 'pdf'], 'Please enter input url and outpput pdf path')
+    .group(['url', 'pdf', 'format'], 'Options:')
+    .group(['display-header-footer', 'omit-background', 'landscape', 'prefer-css-page-size', 'print-background'], 'Flags:\n(Can also be executed with --no-[flag] prefix to set the flag to false)\n')
+
+    .demandOption('url', 'Please enter the URL to an HTML file')
+    .demandOption('pdf', 'Please specify the output pdf name or path')
     .help().argv;
 
 
-console.log('URL: ' + argv.url);
-console.log('PDF path:' + argv.pdf);
-
 class RenderPDF {
 
-    static async renderPDF(url = 'http://127.0.0.1:8080/nutanix/systems-security-module-3/day9/test.html', pdf='test.pdf') {
+    static async renderPDF() {
         const launchParams = {
             headless: true,
             slowMo: 0 // TODO remove debug stuff
@@ -57,21 +65,28 @@ class RenderPDF {
         const browser = await puppeteer.launch(launchParams);
         const page = await browser.newPage();
         await page.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36");
-        await page.goto(url, {
+        await page.goto(argv.url, {
         waitUntil: 'networkidle2',
         });
         
         await page.emulateMediaType("print");
 
-        //await page.waitForTimeout(500); // wait for all fonts to load
         await page.evaluateHandle('document.fonts.ready'); // wait for all fonts to load
 
-        await page.pdf({path: pdf, format: 'a4', displayHeaderFooter: false, landscape: true, preferCSSPageSize: true, printBackground: true, omitBackground: true});
+        await page.pdf({
+            path: argv.pdf,
+            format: argv.format,
+            displayHeaderFooter: argv.displayHeaderFooter,
+            landscape: argv.landscape,
+            preferCSSPageSize: argv.preferCssPageSize,
+            printBackground: argv.printBackground,
+            omitBackground: argv.omitBackground
+        });
 
         await browser.close();
     }
 }
 
 (async () => {
-    await RenderPDF.renderPDF(argv.url, argv.pdf);
+    await RenderPDF.renderPDF();
 })();
