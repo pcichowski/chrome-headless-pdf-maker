@@ -1,6 +1,6 @@
 {
   "name": "chrome-headless-pdf-maker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Easily generate pdfs from your html files",
   "main": "index.js",
   "scripts": {
