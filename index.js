@@ -1,5 +1,14 @@
 #!/usr/bin/env node
 
+const updateNotifier = require('update-notifier');
+let pkg;
+try {
+    pkg = require('./package.json');
+} catch (e) {
+    pkg = require('./package.json');
+}
+
+updateNotifier({pkg}).notify();
 
 const puppeteer = require('puppeteer');
 

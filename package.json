@@ -3,13 +3,29 @@
   "version": "1.0.0",
   "description": "Easily generate pdfs from your html files",
   "main": "index.js",
+  "bin": {
+    "chrome-headless-render-pdf": "dist/chrome-headless-pdf-maker.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "yarn run build",
+    "build": "babel index.js --out-dir dist/",
+    "start": "yarn run build && node dist/chrome-headless-pdf-maker.js"
   },
   "author": "Silentsky0",
   "license": "MIT",
   "dependencies": {
+    "@types/node": "^14.0.10",
+    "babel-polyfill": "^6.23.0",
     "puppeteer": "^15.5.0",
-    "yargs": "^17.5.1"
+    "yargs": "^17.5.1",
+    "update-notifier": "^5.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.18.9",
+    "@babel/core": "^7.18.9",
+    "babel-cli": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.5.2"
   }
 }
