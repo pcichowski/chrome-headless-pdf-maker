@@ -2,6 +2,12 @@
 
 ## Usage:
 
+> Note: this server requires the HTML to be provided by a server, it doesn't 
+work on bare .html files. The easiest way to do that is to host a local server 
+by running `python3 -m http.server 8000`.
+
+> Then, provide the script with a URL to the file, e.g. `http://127.0.0.1:8000/my-file.html`.
+
 ```
 node chrome-headless-pdf-maker --url url/to/html --pdf path/for/output/pdf
 Options:
